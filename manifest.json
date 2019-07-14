@@ -1,0 +1,26 @@
+{
+    "name" : "仿照小米商城",
+    "appid" : "__UNI__0A3F811",
+    "description" : "",
+    "versionName" : "1.1.1",
+    "versionCode" : "100",
+    "transformPx" : false,
+    "app-plus" : {
+        "usingComponents" : true //是否启用`自定义组件模式`，为true表示新的`自定义组件模式` ，否则为`template模板模式`   
+    },
+    /* SDK配置 */
+    "quickapp" : {},
+    /* 快应用特有相关 */
+    "mp-weixin" : {
+        /* 小程序特有相关 */
+        "appid" : "wx32574a38ef6b71ad",
+        "setting" : {
+            "urlCheck" : true
+        },
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "获取当前地址"
+            }
+        }
+    }
+}

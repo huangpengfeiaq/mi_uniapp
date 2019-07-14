@@ -1,0 +1,2 @@
+<import src="./confirmation.vue.wxml" />
+    <template is="360b5fc9" data="{{ ...$root['0'], $root }}"/>
