@@ -388,20 +388,20 @@ var _default = {
       this.productList.push(p);
     }
   },
-  onLoad: function onLoad() {var _this = this;
+  onLoad: function onLoad() {
+    //
 
 
-
-    this.amapPlugin = new _amapWx.default.AMapWX({
-      //高德地图KEY，随时失效，请务必替换为自己的KEY，参考：http://ask.dcloud.net.cn/article/35070
-      key: '7c235a9ac4e25e482614c6b8eac6fd8e' });
-
-    //定位地址
-    this.amapPlugin.getRegeo({
-      success: function success(data) {
-        _this.city = data[0].regeocodeData.addressComponent.city.replace(/市/g, ''); //把"市"去掉
-      } });
-
+    // this.amapPlugin = new amap.AMapWX({
+    // 	//高德地图KEY，随时失效，请务必替换为自己的KEY，参考：http://ask.dcloud.net.cn/article/35070
+    // 	key: '7c235a9ac4e25e482614c6b8eac6fd8e'
+    // });
+    // //定位地址
+    // this.amapPlugin.getRegeo({
+    // 	success: data => {
+    // 		this.city = data[0].regeocodeData.addressComponent.city.replace(/市/g, ''); //把"市"去掉
+    // 	}
+    // });
     //开启定时器
     this.Timer();
     //加载活动专区
@@ -455,11 +455,11 @@ var _default = {
       this.Promotion = tmpPromotion;
     },
     //定时器
-    Timer: function Timer() {var _this2 = this;
+    Timer: function Timer() {var _this = this;
       setInterval(function () {
-        if (_this2.Promotion.length > 0) {
-          for (var i = 0; i < _this2.Promotion.length; i++) {
-            var row = _this2.Promotion[i];
+        if (_this.Promotion.length > 0) {
+          for (var i = 0; i < _this.Promotion.length; i++) {
+            var row = _this.Promotion[i];
             if (row.countdown) {
               if (
               !(
@@ -490,7 +490,7 @@ var _default = {
                   row.countdown.m = 59;
                   row.countdown.s = 59;
                 }
-                _this2.Promotion[i].countdown = row.countdown;
+                _this.Promotion[i].countdown = row.countdown;
               }
             }
           }

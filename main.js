@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 
 Vue.config.productionTip = false;
-Vue.prototype.$token = 'EF17F54E492B3B1AE490C6FB67685779948d292fa9c8470593c8e5112f1c292c';
+Vue.prototype.$token = '1444E7305696166FE27549B73599259Df949bd4442d54f2aaf8cf81ad2b91656';
 Vue.prototype.$tempUrl = 'http://localhost:8088/';
 
 App.mpType = 'app'

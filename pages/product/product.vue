@@ -9,8 +9,8 @@
 				</view>
 				<view class="middle"></view>
 				<view class="icon-btn">
-					<view class="icon tongzhi" @tap="toMsg"></view>
-					<view class="icon cart" @tap="joinCart"></view>
+					<view class="icon kefu" @tap="toMsg"></view>
+					<view class="icon fenxiang" @tap="joinCart"></view>
 				</view>
 			</view>
 			<!-- 头部-滚动渐变显示 -->
@@ -22,30 +22,26 @@
 					<view v-for="(anchor,index) in anchorlist" :class="[selectAnchor==index ?'on':'']" :key="index" @tap="toAnchor(index)">{{anchor.name}}</view>
 				</view>
 				<view class="icon-btn">
-					<view class="icon tongzhi" @tap="toMsg"></view>
-					<view class="icon cart" @tap="joinCart"></view>
+					<view class="icon kefu" @tap="toMsg"></view>
+					<view class="icon fenxiang" @tap="share"></view>
 				</view>
 			</view>
 		</view>
 		<!-- 底部菜单 -->
 		<view class="footer">
 			<view class="icons">
-				<view class="box" @tap="share">
-					<view class="icon fenxiang"></view>
-					<view class="text">分享</view>
-				</view>
-				<view class="box" @tap="toChat">
-					<view class="icon kefu"></view>
-					<view class="text">客服</view>
-				</view>
 				<view class="box" @tap="keep">
 					<view class="icon" :class="[isKeep?'shoucangsel':'shoucang']"></view>
-					<view class="text">{{isKeep?'已':''}}收藏</view>
+					<view class="text">{{isKeep?'已':''}}喜欢</view>
+				</view>
+				<view class="box" @tap="toCart()">
+					<view class="icon cart"></view>
+					<view class="text">购物车</view>
 				</view>
 			</view>
 			<view class="btn">
-				<view class="joinCart" @tap="joinCart">加入购物车</view>
-				<view class="buy" @tap="buy">立即购买</view>
+				<view class="joinCart" @tap="showSpec(false)">加入购物车</view>
+				<!-- <view class="buy" @tap="buy">立即购买</view> -->
 			</view>
 		</view>
 		<!-- share弹窗 -->
@@ -132,7 +128,7 @@
 					</view>
 				</view>
 				<view class="btn">
-					<view class="button" @tap="hideSpec">加入购物车</view>
+					<view class="button" @tap="joinCart()">加入购物车</view>
 				</view>
 			</view>
 		</view>
@@ -156,23 +152,23 @@
 		</view>
 		<!-- 服务-规则选择 -->
 		<view class="info-box spec">
-			<view class="row" @tap="showService">
-				<view class="text">服务</view>
-				<view class="content">
-					<view class="serviceitem" v-for="(item,index) in goodsData.service" :key="index">{{item.name}}</view>
-				</view>
-				<view class="arrow">
-					<view class="icon xiangyou"></view>
-				</view>
-			</view>
 			<view class="row" @tap="showSpec(false)">
-				<view class="text">选择</view>
+				<view class="text">已选</view>
 				<view class="content">
 					<!-- <view>版本：</view> -->
 					<view class="sp">
 						<view v-for="(item,index) in productStyleList" :key="index" :class="[index==selectSpec?'on':'']">{{item.styleVersion}}</view>
 					</view>
 
+				</view>
+				<view class="arrow">
+					<view class="icon xiangyou"></view>
+				</view>
+			</view>
+			<view class="row" @tap="showService">
+				<view class="text"></view>
+				<view class="content">
+					<view class="serviceitem" v-for="(item,index) in goodsData.service" :key="index">{{item.name}}</view>
 				</view>
 				<view class="arrow">
 					<view class="icon xiangyou"></view>
@@ -216,6 +212,10 @@
 	export default {
 		data() {
 			return {
+				tempSelected: {
+					cartNumber: 0,
+					styleId: 0
+				},
 				stylePromotionalPrice: 0,
 				stylePrice: 0,
 				product: {},
@@ -243,17 +243,21 @@
 					price: "127.00",
 					number: 1,
 					service: [{
-							name: "正品保证",
-							description: "此商品官方保证为正品"
+							name: "√ 小米自营",
+							// description: "此商品官方保证为正品"
 						},
 						{
-							name: "极速退款",
-							description: "此商品享受退货极速退款服务"
+							name: "√ 小米发货",
+							description: "由小米发货"
 						},
 						{
-							name: "7天退换",
-							description: "此商品享受7天无理由退换服务"
-						}
+							name: "√ 7天无理由退货",
+							// description: "此商品享受7天无理由退换服务"
+						},
+						// {
+						// 	name: "√ 运费说明",
+						// 	description: "由小米发货的商品，单笔满150元免运费；"
+						// }
 					],
 					spec: ["XS", "S", "M", "L", "XL", "XXL"],
 					comment: {
@@ -355,18 +359,43 @@
 			keep() {
 				this.isKeep = this.isKeep ? false : true;
 			},
+			// 跳转购物车
+			toCart() {
+				uni.switchTab({
+					url: '../tabBar/cart'
+				})
+			},
 			// 加入购物车
 			joinCart() {
-				if (this.selectSpec == null) {
-					return this.showSpec(() => {
-						uni.showToast({
-							title: "已加入购物车"
-						});
-					});
-				}
-				uni.showToast({
-					title: "已加入购物车"
-				});
+				uni.request({
+					url: this.$tempUrl + 'userCart/insertSelectiveBySession',
+					header: {
+						'X-Access-Auth-Token': this.$token
+					},
+					data: {
+						styleId: this.tempSelected.styleId,
+						cartNumber: this.goodsData.number
+					},
+					method: 'POST',
+					success: (res) => {
+						if (res.data.code === 0) {
+							this.specClass = 'hide';
+							uni.showToast({
+								title: "加入购物车成功"
+							});
+						}
+						// uni.switchTab({
+						// 	url: '../tabBar/cart'
+						// })
+					}
+				})
+				// if (this.selectSpec == null) {
+				// 	return this.showSpec(() => {
+				// 		uni.showToast({
+				// 			title: "已加入购物车"
+				// 		});
+				// 	});
+				// }
 			},
 			//立即购买
 			buy() {
@@ -411,9 +440,12 @@
 			},
 			//选择规格
 			setSelectSpec(item, index) {
+				// console.log(this.goodsData.number);
 				this.selectSpec = index;
 				this.stylePromotionalPrice = item.stylePromotionalPrice;
 				this.stylePrice = item.stylePrice;
+
+				this.tempSelected.styleId = item.styleId;
 			},
 			//减少数量
 			sub() {
@@ -497,6 +529,8 @@
 				setTimeout(() => {
 					this.specClass = 'none';
 				}, 200);
+				// //加入购物车
+				// this.joinCart();
 			},
 			discard() {
 				//丢弃
@@ -800,25 +834,25 @@
 
 	.goods-info {
 		.productName {
-			font-size: 40upx;
+			font-size: 44upx;
 		}
 
 		.productPromotion {
-			font-size: 30upx;
-			color: #f47925;
+			font-size: 28upx;
+			color: #FF5722;
 		}
 
 		.productIntroduction {
-			font-size: 30upx;
+			font-size: 28upx;
 		}
 
 		.productPrice {
-			font-size: 46upx;
+			font-size: 44upx;
 			font-weight: 400;
-			color: #f47925;
+			color: #FF5722;
 
 			.del {
-				font-size: 30upx;
+				font-size: 26upx;
 				color: #999;
 				text-decoration: line-through;
 			}
@@ -831,6 +865,7 @@
 			display: flex;
 			align-items: center;
 			margin: 0 0 30upx 0;
+			// border-bottom: solid 1upx #ccc;
 
 			.text {
 				font-size: 24upx;
@@ -844,6 +879,7 @@
 				flex-wrap: wrap;
 
 				.serviceitem {
+					font-size: 22upx;
 					margin-right: 10upx;
 				}
 
@@ -958,7 +994,7 @@
 		bottom: 0upx;
 		width: 92%;
 		padding: 0 4%;
-		height: 99upx;
+		height: 90upx;
 		border-top: solid 1upx #eee;
 		background-color: #fff;
 		z-index: 2;
@@ -972,7 +1008,7 @@
 			margin-left: -4%;
 
 			.box {
-				width: 80upx;
+				width: 160upx;
 				height: 80upx;
 				display: flex;
 				justify-content: center;
@@ -994,16 +1030,17 @@
 		}
 
 		.btn {
-			height: 80upx;
-			border-radius: 40upx;
+			// height: 80upx;
+			height: 90upx;
+			// border-radius: 40upx;
 			overflow: hidden;
 			display: flex;
-			margin-right: -2%;
+			margin-right: -4%;
 
 			.joinCart,
 			.buy {
-				height: 80upx;
-				padding: 0 40upx;
+				height: 90upx;
+				padding: 0 140upx;
 				color: #fff;
 				display: flex;
 				align-items: center;
@@ -1011,7 +1048,8 @@
 			}
 
 			.joinCart {
-				background-color: #f0b46c;
+				// background-color: #f0b46c;
+				background-color: #FF5722;
 			}
 
 			.buy {

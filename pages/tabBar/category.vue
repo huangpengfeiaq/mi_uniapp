@@ -110,6 +110,7 @@
 				//uni.showToast({title: e.name,icon:"none"});
 				uni.navigateTo({
 					url: '../product/product?productId=' + e.productId + '&productName=' + e.productName
+					// url: '../goods/goods?cid=' + e.productId + '&productName=' + e.productName
 				});
 			},
 			//搜索跳转

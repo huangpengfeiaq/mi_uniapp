@@ -324,13 +324,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
 {
   data: function data() {
     return {
+      tempSelected: {
+        cartNumber: 0,
+        styleId: 0 },
+
       stylePromotionalPrice: 0,
       stylePrice: 0,
       product: {},
@@ -358,16 +358,20 @@ __webpack_require__.r(__webpack_exports__);
         price: "127.00",
         number: 1,
         service: [{
-          name: "正品保证",
-          description: "此商品官方保证为正品" },
+          name: "√ 小米自营"
+          // description: "此商品官方保证为正品"
+        },
+        {
+          name: "√ 小米发货",
+          description: "由小米发货" },
 
         {
-          name: "极速退款",
-          description: "此商品享受退货极速退款服务" },
+          name: "√ 7天无理由退货"
+          // description: "此商品享受7天无理由退换服务"
+        }],
 
-        {
-          name: "7天退换",
-          description: "此商品享受7天无理由退换服务" }],
+
+
 
 
         spec: ["XS", "S", "M", "L", "XL", "XXL"],
@@ -470,24 +474,49 @@ __webpack_require__.r(__webpack_exports__);
     keep: function keep() {
       this.isKeep = this.isKeep ? false : true;
     },
-    // 加入购物车
-    joinCart: function joinCart() {
-      if (this.selectSpec == null) {
-        return this.showSpec(function () {
-          uni.showToast({
-            title: "已加入购物车" });
-
-        });
-      }
-      uni.showToast({
-        title: "已加入购物车" });
+    // 跳转购物车
+    toCart: function toCart() {
+      uni.switchTab({
+        url: '../tabBar/cart' });
 
     },
+    // 加入购物车
+    joinCart: function joinCart() {var _this3 = this;
+      uni.request({
+        url: this.$tempUrl + 'userCart/insertSelectiveBySession',
+        header: {
+          'X-Access-Auth-Token': this.$token },
+
+        data: {
+          styleId: this.tempSelected.styleId,
+          cartNumber: this.goodsData.number },
+
+        method: 'POST',
+        success: function success(res) {
+          if (res.data.code === 0) {
+            _this3.specClass = 'hide';
+            uni.showToast({
+              title: "加入购物车成功" });
+
+          }
+          // uni.switchTab({
+          // 	url: '../tabBar/cart'
+          // })
+        } });
+
+      // if (this.selectSpec == null) {
+      // 	return this.showSpec(() => {
+      // 		uni.showToast({
+      // 			title: "已加入购物车"
+      // 		});
+      // 	});
+      // }
+    },
     //立即购买
-    buy: function buy() {var _this3 = this;
+    buy: function buy() {var _this4 = this;
       if (this.selectSpec == null) {
         return this.showSpec(function () {
-          _this3.toConfirmation();
+          _this4.toConfirmation();
         });
       }
       this.toConfirmation();
@@ -526,9 +555,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     //选择规格
     setSelectSpec: function setSelectSpec(item, index) {
+      // console.log(this.goodsData.number);
       this.selectSpec = index;
       this.stylePromotionalPrice = item.stylePromotionalPrice;
       this.stylePrice = item.stylePrice;
+
+      this.tempSelected.styleId = item.styleId;
     },
     //减少数量
     sub: function sub() {
@@ -550,7 +582,7 @@ __webpack_require__.r(__webpack_exports__);
 
     },
     //计算锚点高度
-    calcAnchor: function calcAnchor() {var _this4 = this;
+    calcAnchor: function calcAnchor() {var _this5 = this;
       this.anchorlist = [{
         name: '主图',
         top: 0 },
@@ -572,8 +604,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
         var headerHeight = uni.upx2px(100);
-        _this4.anchorlist[1].top = data.top - headerHeight - statusbarHeight;
-        _this4.anchorlist[2].top = data.bottom - headerHeight - statusbarHeight;
+        _this5.anchorlist[1].top = data.top - headerHeight - statusbarHeight;
+        _this5.anchorlist[2].top = data.bottom - headerHeight - statusbarHeight;
 
       }).exec();
     },
@@ -587,10 +619,10 @@ __webpack_require__.r(__webpack_exports__);
       this.serviceClass = 'show';
     },
     //关闭服务弹窗
-    hideService: function hideService() {var _this5 = this;
+    hideService: function hideService() {var _this6 = this;
       this.serviceClass = 'hide';
       setTimeout(function () {
-        _this5.serviceClass = 'none';
+        _this6.serviceClass = 'none';
       }, 200);
     },
     //规格弹窗
@@ -603,15 +635,17 @@ __webpack_require__.r(__webpack_exports__);
       return;
     },
     //关闭规格弹窗
-    hideSpec: function hideSpec() {var _this6 = this;
+    hideSpec: function hideSpec() {var _this7 = this;
       this.specClass = 'hide';
       //回调
 
       this.selectSpec && this.specCallback && this.specCallback();
       this.specCallback = false;
       setTimeout(function () {
-        _this6.specClass = 'none';
+        _this7.specClass = 'none';
       }, 200);
+      // //加入购物车
+      // this.joinCart();
     },
     discard: function discard() {
       //丢弃
@@ -674,12 +708,12 @@ var render = function() {
           _c("view", { staticClass: "middle" }),
           _c("view", { staticClass: "icon-btn" }, [
             _c("view", {
-              staticClass: "icon tongzhi",
+              staticClass: "icon kefu",
               attrs: { eventid: "14156a3c-1" },
               on: { tap: _vm.toMsg }
             }),
             _c("view", {
-              staticClass: "icon cart",
+              staticClass: "icon fenxiang",
               attrs: { eventid: "14156a3c-2" },
               on: { tap: _vm.joinCart }
             })
@@ -727,14 +761,14 @@ var render = function() {
           ),
           _c("view", { staticClass: "icon-btn" }, [
             _c("view", {
-              staticClass: "icon tongzhi",
+              staticClass: "icon kefu",
               attrs: { eventid: "14156a3c-5" },
               on: { tap: _vm.toMsg }
             }),
             _c("view", {
-              staticClass: "icon cart",
+              staticClass: "icon fenxiang",
               attrs: { eventid: "14156a3c-6" },
-              on: { tap: _vm.joinCart }
+              on: { tap: _vm.share }
             })
           ])
         ]
@@ -747,30 +781,6 @@ var render = function() {
           {
             staticClass: "box",
             attrs: { eventid: "14156a3c-7" },
-            on: { tap: _vm.share }
-          },
-          [
-            _c("view", { staticClass: "icon fenxiang" }),
-            _c("view", { staticClass: "text" }, [_vm._v("分享")])
-          ]
-        ),
-        _c(
-          "view",
-          {
-            staticClass: "box",
-            attrs: { eventid: "14156a3c-8" },
-            on: { tap: _vm.toChat }
-          },
-          [
-            _c("view", { staticClass: "icon kefu" }),
-            _c("view", { staticClass: "text" }, [_vm._v("客服")])
-          ]
-        ),
-        _c(
-          "view",
-          {
-            staticClass: "box",
-            attrs: { eventid: "14156a3c-9" },
             on: { tap: _vm.keep }
           },
           [
@@ -779,8 +789,24 @@ var render = function() {
               class: [_vm.isKeep ? "shoucangsel" : "shoucang"]
             }),
             _c("view", { staticClass: "text" }, [
-              _vm._v(_vm._s(_vm.isKeep ? "已" : "") + "收藏")
+              _vm._v(_vm._s(_vm.isKeep ? "已" : "") + "喜欢")
             ])
+          ]
+        ),
+        _c(
+          "view",
+          {
+            staticClass: "box",
+            attrs: { eventid: "14156a3c-8" },
+            on: {
+              tap: function($event) {
+                _vm.toCart()
+              }
+            }
+          },
+          [
+            _c("view", { staticClass: "icon cart" }),
+            _c("view", { staticClass: "text" }, [_vm._v("购物车")])
           ]
         )
       ]),
@@ -789,19 +815,14 @@ var render = function() {
           "view",
           {
             staticClass: "joinCart",
-            attrs: { eventid: "14156a3c-10" },
-            on: { tap: _vm.joinCart }
+            attrs: { eventid: "14156a3c-9" },
+            on: {
+              tap: function($event) {
+                _vm.showSpec(false)
+              }
+            }
           },
           [_vm._v("加入购物车")]
-        ),
-        _c(
-          "view",
-          {
-            staticClass: "buy",
-            attrs: { eventid: "14156a3c-11" },
-            on: { tap: _vm.buy }
-          },
-          [_vm._v("立即购买")]
         )
       ])
     ]),
@@ -810,7 +831,7 @@ var render = function() {
       {
         staticClass: "share",
         class: _vm.shareClass,
-        attrs: { eventid: "14156a3c-14" },
+        attrs: { eventid: "14156a3c-12" },
         on: {
           touchmove: function($event) {
             $event.stopPropagation()
@@ -826,7 +847,7 @@ var render = function() {
           "view",
           {
             staticClass: "layer",
-            attrs: { eventid: "14156a3c-13" },
+            attrs: { eventid: "14156a3c-11" },
             on: {
               tap: function($event) {
                 $event.stopPropagation()
@@ -841,7 +862,7 @@ var render = function() {
               "view",
               {
                 staticClass: "btn",
-                attrs: { eventid: "14156a3c-12" },
+                attrs: { eventid: "14156a3c-10" },
                 on: { tap: _vm.hideShare }
               },
               [_vm._v("取消")]
@@ -855,7 +876,7 @@ var render = function() {
       {
         staticClass: "popup service",
         class: _vm.serviceClass,
-        attrs: { eventid: "14156a3c-17" },
+        attrs: { eventid: "14156a3c-15" },
         on: {
           touchmove: function($event) {
             $event.stopPropagation()
@@ -871,7 +892,7 @@ var render = function() {
           "view",
           {
             staticClass: "layer",
-            attrs: { eventid: "14156a3c-16" },
+            attrs: { eventid: "14156a3c-14" },
             on: {
               tap: function($event) {
                 $event.stopPropagation()
@@ -899,7 +920,7 @@ var render = function() {
                 "view",
                 {
                   staticClass: "button",
-                  attrs: { eventid: "14156a3c-15" },
+                  attrs: { eventid: "14156a3c-13" },
                   on: { tap: _vm.hideService }
                 },
                 [_vm._v("完成")]
@@ -914,7 +935,7 @@ var render = function() {
       {
         staticClass: "popup spec",
         class: _vm.specClass,
-        attrs: { eventid: "14156a3c-25" },
+        attrs: { eventid: "14156a3c-23" },
         on: {
           touchmove: function($event) {
             $event.stopPropagation()
@@ -930,7 +951,7 @@ var render = function() {
           "view",
           {
             staticClass: "layer",
-            attrs: { eventid: "14156a3c-24" },
+            attrs: { eventid: "14156a3c-22" },
             on: {
               tap: function($event) {
                 $event.stopPropagation()
@@ -950,7 +971,7 @@ var render = function() {
                     {
                       key: index,
                       class: [index == _vm.selectSpec ? "on" : ""],
-                      attrs: { eventid: "14156a3c-18-" + index },
+                      attrs: { eventid: "14156a3c-16-" + index },
                       on: {
                         tap: function($event) {
                           _vm.setSelectSpec(item, index)
@@ -979,7 +1000,7 @@ var render = function() {
                         "view",
                         {
                           staticClass: "sub",
-                          attrs: { eventid: "14156a3c-19" },
+                          attrs: { eventid: "14156a3c-17" },
                           on: {
                             tap: function($event) {
                               $event.stopPropagation()
@@ -993,7 +1014,7 @@ var render = function() {
                         "view",
                         {
                           staticClass: "input",
-                          attrs: { eventid: "14156a3c-21" },
+                          attrs: { eventid: "14156a3c-19" },
                           on: {
                             tap: function($event) {
                               $event.stopPropagation()
@@ -1011,7 +1032,7 @@ var render = function() {
                                 expression: "goodsData.number"
                               }
                             ],
-                            attrs: { type: "number", eventid: "14156a3c-20" },
+                            attrs: { type: "number", eventid: "14156a3c-18" },
                             domProps: { value: _vm.goodsData.number },
                             on: {
                               input: function($event) {
@@ -1028,7 +1049,7 @@ var render = function() {
                         "view",
                         {
                           staticClass: "add",
-                          attrs: { eventid: "14156a3c-22" },
+                          attrs: { eventid: "14156a3c-20" },
                           on: {
                             tap: function($event) {
                               $event.stopPropagation()
@@ -1047,8 +1068,12 @@ var render = function() {
                 "view",
                 {
                   staticClass: "button",
-                  attrs: { eventid: "14156a3c-23" },
-                  on: { tap: _vm.hideSpec }
+                  attrs: { eventid: "14156a3c-21" },
+                  on: {
+                    tap: function($event) {
+                      _vm.joinCart()
+                    }
+                  }
                 },
                 [_vm._v("加入购物车")]
               )
@@ -1067,7 +1092,7 @@ var render = function() {
             attrs: {
               circular: "true",
               autoplay: "true",
-              eventid: "14156a3c-27"
+              eventid: "14156a3c-25"
             },
             on: { change: _vm.swiperChange }
           },
@@ -1082,7 +1107,7 @@ var render = function() {
                 _c("image", {
                   attrs: {
                     src: swiper.styleCover,
-                    eventid: "14156a3c-26-" + index0
+                    eventid: "14156a3c-24-" + index0
                   },
                   on: {
                     tap: function($event) {
@@ -1164,28 +1189,7 @@ var render = function() {
         "view",
         {
           staticClass: "row",
-          attrs: { eventid: "14156a3c-28" },
-          on: { tap: _vm.showService }
-        },
-        [
-          _c("view", { staticClass: "text" }, [_vm._v("服务")]),
-          _c(
-            "view",
-            { staticClass: "content" },
-            _vm._l(_vm.goodsData.service, function(item, index) {
-              return _c("view", { key: index, staticClass: "serviceitem" }, [
-                _vm._v(_vm._s(item.name))
-              ])
-            })
-          ),
-          _vm._m(1)
-        ]
-      ),
-      _c(
-        "view",
-        {
-          staticClass: "row",
-          attrs: { eventid: "14156a3c-29" },
+          attrs: { eventid: "14156a3c-26" },
           on: {
             tap: function($event) {
               _vm.showSpec(false)
@@ -1193,7 +1197,7 @@ var render = function() {
           }
         },
         [
-          _c("view", { staticClass: "text" }, [_vm._v("选择")]),
+          _c("view", { staticClass: "text" }, [_vm._v("已选")]),
           _c("view", { staticClass: "content" }, [
             _c(
               "view",
@@ -1207,6 +1211,27 @@ var render = function() {
               })
             )
           ]),
+          _vm._m(1)
+        ]
+      ),
+      _c(
+        "view",
+        {
+          staticClass: "row",
+          attrs: { eventid: "14156a3c-27" },
+          on: { tap: _vm.showService }
+        },
+        [
+          _c("view", { staticClass: "text" }),
+          _c(
+            "view",
+            { staticClass: "content" },
+            _vm._l(_vm.goodsData.service, function(item, index) {
+              return _c("view", { key: index, staticClass: "serviceitem" }, [
+                _vm._v(_vm._s(item.name))
+              ])
+            })
+          ),
           _vm._m(2)
         ]
       )
@@ -1223,7 +1248,7 @@ var render = function() {
             "view",
             {
               staticClass: "arrow",
-              attrs: { eventid: "14156a3c-31" },
+              attrs: { eventid: "14156a3c-29" },
               on: { tap: _vm.toRatings }
             },
             [
@@ -1231,7 +1256,7 @@ var render = function() {
                 "view",
                 {
                   staticClass: "show",
-                  attrs: { eventid: "14156a3c-30" },
+                  attrs: { eventid: "14156a3c-28" },
                   on: {
                     tap: function($event) {
                       _vm.showComments(_vm.goodsData.id)
@@ -1250,7 +1275,7 @@ var render = function() {
           "view",
           {
             staticClass: "comment",
-            attrs: { eventid: "14156a3c-32" },
+            attrs: { eventid: "14156a3c-30" },
             on: { tap: _vm.toRatings }
           },
           [

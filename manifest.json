@@ -15,7 +15,7 @@
         /* 小程序特有相关 */
         "appid" : "wx32574a38ef6b71ad",
         "setting" : {
-            "urlCheck" : true
+            "urlCheck" : false
         },
         "permission" : {
             "scope.userLocation" : {

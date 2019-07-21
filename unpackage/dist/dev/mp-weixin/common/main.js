@@ -84,7 +84,7 @@ var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules
 var _App = _interopRequireDefault(__webpack_require__(/*! ./App */ "../../../../Users/64165/Desktop/mi_uniapp/App.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
 
 _vue.default.config.productionTip = false;
-_vue.default.prototype.$token = 'EF17F54E492B3B1AE490C6FB67685779948d292fa9c8470593c8e5112f1c292c';
+_vue.default.prototype.$token = '1444E7305696166FE27549B73599259Df949bd4442d54f2aaf8cf81ad2b91656';
 _vue.default.prototype.$tempUrl = 'http://localhost:8088/';
 
 _App.default.mpType = 'app';

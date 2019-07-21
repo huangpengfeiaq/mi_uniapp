@@ -183,6 +183,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 {
   data: function data() {
     return {
@@ -192,12 +193,14 @@ __webpack_require__.r(__webpack_exports__);
       statusTop: null,
       selectedList: [],
       isAllselected: false,
-      goodsList: [
-      { id: 1, img: '../../static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
-      { id: 2, img: '../../static/img/goods/p2.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
-      { id: 3, img: '../../static/img/goods/p3.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
-      { id: 4, img: '../../static/img/goods/p4.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
-      { id: 5, img: '../../static/img/goods/p5.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false }],
+      goodsList: [{
+        id: 1,
+        img: '../../static/img/goods/p1.jpg',
+        name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',
+        spec: '规格:S码',
+        price: 127.5,
+        number: 1,
+        selected: false }],
 
       //控制滑动效果
       theIndex: null,
@@ -217,6 +220,9 @@ __webpack_require__.r(__webpack_exports__);
       uni.stopPullDownRefresh();
     }, 1000);
   },
+  onShow: function onShow() {
+    this.loadList();
+  },
   onLoad: function onLoad() {
     //兼容H5下结算条位置
 
@@ -227,20 +233,35 @@ __webpack_require__.r(__webpack_exports__);
 
   },
   methods: {
+    loadList: function loadList() {var _this = this;
+      uni.request({
+        url: this.$tempUrl + 'userCart/selectListBySession',
+        header: {
+          'X-Access-Auth-Token': this.$token },
+
+        data: {
+          pageNum: '1',
+          pageSize: '99' },
+
+        method: 'GET',
+        success: function success(res) {
+          _this.goodsList = res.data.content;
+        } });
+
+    },
     //加入商品 参数 goods:商品数据
     joinGoods: function joinGoods(goods) {
       /*
-                                          * 这里只是展示一种添加逻辑，模板并没有做从其他页面加入商品到购物车的具体动作，
-                                          * 在实际应用上，前端并不会直接插入记录到goodsList这一个动作，一般是更新列表和本地列表缓存。
-                                          * 一般商城购物车的增删改动作是由后端来完成的,
-                                          * 后端记录后返回前端更新前端缓存
-                                          */
+                                           * 这里只是展示一种添加逻辑，模板并没有做从其他页面加入商品到购物车的具体动作，
+                                           * 在实际应用上，前端并不会直接插入记录到goodsList这一个动作，一般是更新列表和本地列表缓存。
+                                           * 一般商城购物车的增删改动作是由后端来完成的,
+                                           * 后端记录后返回前端更新前端缓存
+                                           */
       var len = this.goodsList.length;
       var isFind = false; //是否找到ID一样的商品
       for (var _i = 0; _i < len; _i++) {
         var row = this.goodsList[_i];
-        if (row.id == goods.id)
-        {//找到商品一样的商品
+        if (row.id == goods.id) {//找到商品一样的商品
           this.goodsList[_i].number++; //数量自增
           isFind = true; //找到一样的商品
           break; //跳出循环
@@ -263,7 +284,7 @@ __webpack_require__.r(__webpack_exports__);
       //初始坐标
       this.initXY = [event.touches[0].pageX, event.touches[0].pageY];
     },
-    touchMove: function touchMove(index, event) {var _this = this;
+    touchMove: function touchMove(index, event) {var _this2 = this;
       //多点触控不触发
       if (event.touches.length > 1) {
         this.isStop = true;
@@ -290,7 +311,7 @@ __webpack_require__.r(__webpack_exports__);
           this.theIndex = null;
           this.isStop = true;
           setTimeout(function () {
-            _this.oldIndex = null;
+            _this2.oldIndex = null;
           }, 150);
         }
       }
@@ -304,9 +325,14 @@ __webpack_require__.r(__webpack_exports__);
 
     //商品跳转
     toGoods: function toGoods(e) {
-      uni.showToast({ title: '商品' + e.id, icon: "none" });
+      // console.log(e)
+      // uni.showToast({
+      // 	title: '商品' + e.id,
+      // 	icon: "none"
+      // });
       uni.navigateTo({
-        url: '../goods/goods' });
+        // url: '../goods/goods'
+        url: '../product/product?productId=' + e.productId + '&productName=' + e.name });
 
     },
     //跳转确认订单页面
@@ -352,8 +378,7 @@ __webpack_require__.r(__webpack_exports__);
     // 删除商品s
     deleteList: function deleteList() {
       var len = this.selectedList.length;
-      while (this.selectedList.length > 0)
-      {
+      while (this.selectedList.length > 0) {
         this.deleteGoods(this.selectedList[0]);
       }
       this.selectedList = [];
