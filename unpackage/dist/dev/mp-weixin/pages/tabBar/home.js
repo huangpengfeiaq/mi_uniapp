@@ -229,24 +229,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 var _amapWx = _interopRequireDefault(__webpack_require__(/*! @/common/SDK/amap-wx.js */ "../../../../Users/64165/Desktop/mi_uniapp/common/SDK/amap-wx.js"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var ttt = 0; //高德SDK
 var _default = {
   data: function data() {
@@ -258,28 +240,77 @@ var _default = {
       city: '北京',
       currentSwiper: 0,
       // 轮播图片
-      swiperList: [
-      { id: 1, src: 'url1', img: '../../static/img/1.jpg' },
-      { id: 2, src: 'url2', img: '../../static/img/2.jpg' },
-      { id: 3, src: 'url3', img: '../../static/img/3.jpg' }],
+      swiperList: [{
+        id: 1,
+        src: 'url1',
+        img: '../../static/img/1.png' },
+
+      {
+        id: 2,
+        src: 'url2',
+        img: '../../static/img/2.png' },
+
+      {
+        id: 3,
+        src: 'url3',
+        img: '../../static/img/3.png' }],
+
 
       // 分类菜单
-      categoryList: [
-      { id: 1, name: '新品发布', img: '../../static/img/category/8.png' },
-      { id: 2, name: '小米众筹', img: '../../static/img/category/2.png' },
-      { id: 3, name: '小米CC', img: '../../static/img/category/3.png' },
-      { id: 4, name: '1分拼团', img: '../../static/img/category/4.png' },
-      { id: 5, name: '超值特卖', img: '../../static/img/category/5.png' },
-      { id: 6, name: '小米秒杀', img: '../../static/img/category/6.png' },
-      { id: 7, name: '以旧换新', img: '../../static/img/category/7.png' },
-      { id: 8, name: '电视热卖', img: '../../static/img/category/1.png' },
-      { id: 8, name: '空调热卖', img: '../../static/img/category/1.png' },
-      { id: 8, name: '米粉卡', img: '../../static/img/category/8.png' }],
+      categoryList: [{
+        id: 1,
+        name: '新品发布',
+        img: '../../static/img/category/8.png' },
+
+      {
+        id: 2,
+        name: '小米众筹',
+        img: '../../static/img/category/2.png' },
+
+      {
+        id: 3,
+        name: '小米CC',
+        img: '../../static/img/category/3.png' },
+
+      {
+        id: 4,
+        name: '1分拼团',
+        img: '../../static/img/category/4.png' },
+
+      {
+        id: 5,
+        name: '超值特卖',
+        img: '../../static/img/category/5.png' },
+
+      {
+        id: 6,
+        name: '小米秒杀',
+        img: '../../static/img/category/6.png' },
+
+      {
+        id: 7,
+        name: '以旧换新',
+        img: '../../static/img/category/7.png' },
+
+      {
+        id: 8,
+        name: '电视热卖',
+        img: '../../static/img/category/1.png' },
+
+      {
+        id: 8,
+        name: '空调热卖',
+        img: '../../static/img/category/1.png' },
+
+      {
+        id: 8,
+        name: '米粉卡',
+        img: '../../static/img/category/8.png' }],
+
 
       Promotion: [],
       //猜你喜欢列表
-      productList: [
-      {
+      productList: [{
         goods_id: 0,
         img: '../../static/img/goods/p1.jpg',
         name: '商品名称商品名称商品名称商品名称商品名称',
@@ -367,7 +398,9 @@ var _default = {
   },
   //上拉加载，需要自己在page.json文件中配置"onReachBottomDistance"
   onReachBottom: function onReachBottom() {
-    uni.showToast({ title: '触发上拉加载' });
+    uni.showToast({
+      title: '触发上拉加载' });
+
     var len = this.productList.length;
     if (len >= 40) {
       this.loadingText = '到底了';
@@ -379,8 +412,7 @@ var _default = {
       var goods_id = end_goods_id + i;
       var p = {
         goods_id: goods_id,
-        img:
-        '../../static/img/goods/p' + (goods_id % 10 == 0 ? 10 : goods_id % 10) + '.jpg',
+        img: '../../static/img/goods/p' + (goods_id % 10 == 0 ? 10 : goods_id % 10) + '.jpg',
         name: '商品名称商品名称商品名称商品名称商品名称',
         price: '￥168',
         slogan: '1235人付款' };
@@ -415,8 +447,7 @@ var _default = {
       mm = cutTime.getMonth() + 1,
       dd = cutTime.getDate();
       var tmpcountdown = yy + '/' + mm + '/' + dd + ' 23:59:59';
-      var tmpPromotion = [
-      {
+      var tmpPromotion = [{
         title: '整点秒杀',
         ad: '整天秒杀专区',
         img: '../../static/img/s1.jpg',
@@ -449,7 +480,11 @@ var _default = {
             m = m < 10 ? '0' + m : m;
             s = s < 10 ? '0' + s : s;
           }
-          tmpPromotion[i].countdown = { h: h, m: m, s: s };
+          tmpPromotion[i].countdown = {
+            h: h,
+            m: m,
+            s: s };
+
         }
       }
       this.Promotion = tmpPromotion;
@@ -505,11 +540,16 @@ var _default = {
     },
     //搜索跳转
     toSearch: function toSearch() {
-      uni.showToast({ title: '建议跳转到新页面做搜索功能' });
+      uni.showToast({
+        title: '建议跳转到新页面做搜索功能' });
+
     },
     //轮播图跳转
     toSwiper: function toSwiper(e) {
-      uni.showToast({ title: e.src, icon: 'none' });
+      uni.showToast({
+        title: e.src,
+        icon: 'none' });
+
     },
     //分类跳转
     toCategory: function toCategory(e) {
@@ -520,11 +560,17 @@ var _default = {
     },
     //推荐商品跳转
     toPromotion: function toPromotion(e) {
-      uni.showToast({ title: e.title, icon: 'none' });
+      uni.showToast({
+        title: e.title,
+        icon: 'none' });
+
     },
     //商品跳转
     toGoods: function toGoods(e) {
-      uni.showToast({ title: '商品' + e.goods_id, icon: 'none' });
+      uni.showToast({
+        title: '商品' + e.goods_id,
+        icon: 'none' });
+
       uni.navigateTo({
         url: '../goods/goods' });
 

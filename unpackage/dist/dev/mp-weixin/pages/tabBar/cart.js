@@ -406,17 +406,42 @@ __webpack_require__.r(__webpack_exports__);
       this.sum();
     },
     // 减少数量
-    sub: function sub(index) {
+    sub: function sub(row, index) {
+      // console.log(row);
       if (this.goodsList[index].number <= 1) {
         return;
       }
       this.goodsList[index].number--;
       this.sum();
+      //异步请求
+      uni.request({
+        url: this.$tempUrl + 'userCart/updateBySession',
+        header: {
+          'X-Access-Auth-Token': this.$token },
+
+        data: {
+          cartId: row.id,
+          type: 1 },
+
+        method: 'PUT' });
+
     },
     // 增加数量
-    add: function add(index) {
+    add: function add(row, index) {
       this.goodsList[index].number++;
       this.sum();
+      //异步请求
+      uni.request({
+        url: this.$tempUrl + 'userCart/updateBySession',
+        header: {
+          'X-Access-Auth-Token': this.$token },
+
+        data: {
+          cartId: row.id,
+          type: 2 },
+
+        method: 'PUT' });
+
     },
     // 合计
     sum: function sum(e, index) {
@@ -580,7 +605,7 @@ var render = function() {
                               on: {
                                 tap: function($event) {
                                   $event.stopPropagation()
-                                  _vm.sub(index)
+                                  _vm.sub(row, index)
                                 }
                               }
                             },
@@ -637,7 +662,7 @@ var render = function() {
                               on: {
                                 tap: function($event) {
                                   $event.stopPropagation()
-                                  _vm.add(index)
+                                  _vm.add(row, index)
                                 }
                               }
                             },

@@ -34,13 +34,13 @@
 							<view class="price-number">
 								<view class="price">￥{{row.price}}</view>
 								<view class="number">
-									<view class="sub" @tap.stop="sub(index)">
+									<view class="sub" @tap.stop="sub(row,index)">
 										<view class="icon jian"></view>
 									</view>
 									<view class="input" @tap.stop="discard">
 										<input type="number" v-model="row.number" @input="sum($event,index)" />
 									</view>
-									<view class="add" @tap.stop="add(index)">
+									<view class="add" @tap.stop="add(row,index)">
 										<view class="icon jia"></view>
 									</view>
 								</view>
@@ -291,17 +291,42 @@
 				this.sum();
 			},
 			// 减少数量
-			sub(index) {
+			sub(row,index) {
+				// console.log(row);
 				if (this.goodsList[index].number <= 1) {
 					return;
 				}
 				this.goodsList[index].number--;
 				this.sum();
+				//异步请求
+				uni.request({
+					url: this.$tempUrl + 'userCart/updateBySession',
+					header: {
+						'X-Access-Auth-Token': this.$token
+					},
+					data: {
+						cartId: row.id,
+						type: 1
+					},
+					method: 'PUT'
+				})
 			},
 			// 增加数量
-			add(index) {
+			add(row,index) {
 				this.goodsList[index].number++;
 				this.sum();
+				//异步请求
+				uni.request({
+					url: this.$tempUrl + 'userCart/updateBySession',
+					header: {
+						'X-Access-Auth-Token': this.$token
+					},
+					data: {
+						cartId: row.id,
+						type: 2
+					},
+					method: 'PUT'
+				})
 			},
 			// 合计
 			sum(e, index) {
